@@ -9,7 +9,15 @@ class GameObject(pygame.sprite.Sprite):
 
     """Base game object class"""
 
-    def draw(self, window: pygame.display) -> NoReturn:
+    def __init__(self, x, y):
+        super().__init__()
+
+        self.x = x
+        self.y = y
+
+
+    def draw(self, window: pygame.display) -> None:
+
         """Method to specify what to draw onto the window"""
 
 
@@ -21,12 +29,14 @@ class Game():
             window_name: str,
             window_width: int,
             window_height: int,
-            COLOUR_PALETTE: dict
+            COLOUR_PALETTE: dict,
+            frame_rate: int
             ):
 
         self.COLOUR_PALETTE = COLOUR_PALETTE
         self.window_name = window_name
-        
+        self.clock = pygame.time.Clock()
+
         self.window_width = window_width
         self.window_height = window_height
 
@@ -34,7 +44,8 @@ class Game():
 
         self.setup_window()
 
-    def setup_window(self) -> NoReturn:
+    def setup_window(self) -> None:
+
         """Method to setup game window"""
 
         self.window = pygame.display.set_mode(
@@ -42,7 +53,8 @@ class Game():
         pygame.display.set_caption((self.window_name))
         os.environ["SDL_VIDEO_CENTERED"] = "1"
     
-    def draw(self) -> NoReturn:
+    def draw(self) -> None:
+
         """Method to draw all objects"""
 
         self.window.fill(self.COLOUR_PALETTE["Black"])
@@ -50,12 +62,16 @@ class Game():
         for obj in self.objects:
             obj.draw(self.window, self.COLOUR_PALETTE)
     
-    def add_object(self, game_object: GameObject) -> NoReturn:
+    def add_object(self, game_object: GameObject) -> None:
+
+        """Method to add a game object to the game object list"""
 
         self.objects.append(game_object)
 
     
-    def handle_events(self) -> NoReturn:
+    def handle_events(self) -> None:
+
+        """Method to handle pygame events"""
 
         for event in pygame.event.get():
 
@@ -63,10 +79,13 @@ class Game():
                 pygame.quit()
                 sys.exit()
     
-    def main_loop(self) -> NoReturn:
+    def main_loop(self) -> None:
+
+        """Method containing the main loop"""
 
         while True:
-
+            
+            self.clock.tick(self.frame_rate)
             self.handle_events()
 
             self.draw()
